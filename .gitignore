@@ -1,0 +1,67 @@
+# TouchDesigner
+*.toe.autosave*
+*.toe.crashautosave*
+*.tox.autosave*
+*.tox.crashautosave*
+*.tderror
+*.tdlog
+TDPyEnvManagerContext.json
+
+# Cache and temp files
+cache/
+*.cache
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# External files (add if using many)
+*.tox
+*.toe~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+._.DS_Store
+
+# Linux
+*~
+
+# Python / Scripts (if you have any)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Touchdesigner related
+Backup/
+Ich bin mir selber fremd geworden_vEnv/
+logs/
+mapping/
