@@ -106,18 +106,24 @@ class Main:
         TODO upon saving parameters send feedback to textport,
         UI and TouchOSC
         """
-        # optimize OSC messaging and use 
-    def saveStorageExt(self):
-        """
-        TODO upon storing fixture data save the storage to a new file
-        """
+        # optimize OSC messaging and use the general osc module
+        # with different targets and functionalities
 
-    def RecallStorage(self, val, channel):
-        """
+    def sendOSC(self, osc_address, value):
+        client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
+        client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
 
-        upon selecting a preset from the scene selector
-        send OSC messages that update the PCs OSCIn and
-        TouchOSCs Input
+        try:
+            client_tosc.send_message(address=osc_address, value=value)
+            client_local.send_message(address=osc_address, value=value)
+        except Exception as e:
+            print(f"failed sending osc message with error:", e)
+
+    def loadPreset(self, val, channel):
+        """
+        upon selecting a preset from the TouchOSC scene selector
+        send OSC messages that updates the PCs OSCIn and
+        TouchOSCs Dimmer Faders
         manage if bank 1 or 2 is selected and therefore
         send to the correct bank
         TODO it would be nice to filter for certain parameters
@@ -129,9 +135,9 @@ class Main:
         else:
             bank = "OSC2"
 
-        # create a client_tosc that sends to IP 127.0.0.1, port 8000
-        client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
-        client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
+        # # create a client_tosc that sends to IP 127.0.0.1, port 8000
+        # client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
+        # client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
 
         preset = "table_storage"
 
@@ -143,14 +149,16 @@ class Main:
                 op(preset)[item, int(val + 6)].val
             )  # offset by 6 to get in range of stored parameters
 
-            try:
-                client_tosc.send_message(f"{osc_address}", par_val)
-                client_local.send_message(f"{osc_address}", par_val)
-                print(f"Sent value {par_val} to {osc_address}")
+            self.sendOSC(osc_address, par_val)
 
-            except Exception as e:
-                # handle/log and continue the loop so one failure doesn't abort the whole routine
-                print(f"Failed to send OSC to {osc_address}: {e}")
+            # try:
+            #     client_tosc.send_message(f"{osc_address}", par_val)
+            #     client_local.send_message(f"{osc_address}", par_val)
+            #     print(f"Sent value {par_val} to {osc_address}")
+
+            # except Exception as e:
+            #     # handle/log and continue the loop so one failure doesn't abort the whole routine
+            #     print(f"Failed to send OSC to {osc_address}: {e}")
 
     def createFixtures(self):
         """
@@ -163,11 +171,13 @@ class Main:
         create settings:
             dmx address
             footprint
+        create master parameters:
+            master dimmer
         """
         comp = op("container2")  # replace with your component
 
         # get the "Setting" page
-        page = next((pg for pg in comp.customPages if pg.name == "Custom"), None)
+        page = next((pg for pg in comp.customPages if pg.name == "Settings"), None)
         if page is None:
             page = comp.appendCustomPage("Settings")
 
@@ -182,10 +192,12 @@ class Main:
                 par = page.appendFloat(new_name, label=name)
 
         # get the "Custom" page (create it if it doesn't exist)
-        page = next((pg for pg in comp.customPages if pg.name == "Custom"), None)
+        page = next((pg for pg in comp.customPages if pg.name == "Parameters"), None)
         if page is None:
-            page = comp.appendCustomPage("Custom")
+            page = comp.appendCustomPage("Parameters")
 
+        # TODO this list should be pulled from locally stored preset tables,
+        # add info for 8-bit or 16-bit values
         # define your float parameters: name, label, default, min, max
         chanList = [
             "CYAN",
@@ -234,6 +246,8 @@ class Main:
             if not hasattr(comp.par, new_name):
                 par = page.appendFloat(new_name, label=label)
 
+        # TODO create master page
+
     def resetFixtureExpressions(self):
         """
         TODO once I set values manually via the fixture settings
@@ -253,6 +267,3 @@ class Main:
 
             operator.pars(param)[0].mode = ParMode.EXPRESSION
             operator.pars(param)[0].expr = f"op('colorScene')[0][{i-1}]"
-
-    def Test(self):
-        print("test")
