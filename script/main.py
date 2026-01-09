@@ -119,6 +119,12 @@ class Main:
         except Exception as e:
             print(f"failed sending osc message with error:", e)
 
+    """
+    Override CHOP takes all values from different sources (TouchOSC, UI, preload section from storage)
+    the single values that changes last will be selected from the different input CHOPs
+    changes will be synced across the different UI panels upon loading presets or at the end of wiggled faders
+    """
+
     def loadPreset(self, val, channel):
         """
         upon selecting a preset from the TouchOSC scene selector
@@ -247,6 +253,8 @@ class Main:
                 par = page.appendFloat(new_name, label=label)
 
         # TODO create master page
+
+        # TODO once I create a fixture I need to update my rename CHOP and constant CHOPs that control my override CHOP
 
     def resetFixtureExpressions(self):
         """
