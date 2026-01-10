@@ -188,7 +188,8 @@ class Main:
             page = comp.appendCustomPage("Parameters")
 
         # TODO this list should be pulled from locally stored preset tables,
-        # add info for 8-bit or 16-bit values
+        # add info for 8-bit or 16-bit values (FINE channels maybe) - don't create 2 fader in the parameter page for that section but the dmx channels inside the fixture
+        # create a selector that pulls all the 16 bit floats and create two seperate dmx channels and replace them in the master chain
         # define your float parameters: name, label, default, min, max
         chanList = [
             "CYAN",
