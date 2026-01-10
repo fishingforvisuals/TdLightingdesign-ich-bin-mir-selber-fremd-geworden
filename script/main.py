@@ -109,13 +109,13 @@ class Main:
         # optimize OSC messaging and use the general osc module
         # with different targets and functionalities
 
-    def sendOSC(self, osc_address, value):
+    def sendOSC(self, osc_address, osc_val):
         client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
         client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
 
         try:
-            client_tosc.send_message(address=osc_address, value=value)
-            client_local.send_message(address=osc_address, value=value)
+            client_tosc.send_message(address=osc_address, value=osc_val)
+            client_local.send_message(address=osc_address, value=osc_val)
         except Exception as e:
             print(f"failed sending osc message with error:", e)
 
@@ -125,7 +125,7 @@ class Main:
     changes will be synced across the different UI panels upon loading presets or at the end of wiggled faders
     """
 
-    def loadPreset(self, val, channel):
+    def LoadPreset(self, val, channel):
         """
         upon selecting a preset from the TouchOSC scene selector
         send OSC messages that updates the PCs OSCIn and
@@ -136,35 +136,23 @@ class Main:
         TODO currently pulls dimmer values from table_storage(deprecated) - change to new storage location
         """
 
-        if channel.index == 0:
-            bank = "OSC1"
-        else:
-            bank = "OSC2"
+        # send preset values to correct osc faders in oscin1 and touchOSC
+        # PC UI will be updated when the fader that selects the preloaded banks is moved
+        # the functions channel.index can be used to send the values to the correct bank
+        # pull dimmer data from storage/dimmer_data
 
-        # # create a client_tosc that sends to IP 127.0.0.1, port 8000
-        # client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
-        # client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
+        dimmer_data = "storage/dimmer_data"
+        bank = channel.index + 1
+        preset = f"preset{int(val + 1)}"
 
-        preset = "table_storage"
+        print(bank, preset)
 
-        for item in range(op(preset).numRows)[1:]:
+        for dimmer in range(op(dimmer_data).numRows)[1:]:
             # Get the target parameter name and value from the table
-            osc_address = op(preset)[item, bank].val
-            osc_address = "/" + osc_address
-            par_val = float(
-                op(preset)[item, int(val + 6)].val
-            )  # offset by 6 to get in range of stored parameters
-
+            osc_address = f"/grid{bank}/{dimmer}"
+            par_val = float(op(dimmer_data)[dimmer, preset].val)
+            print(osc_address, par_val)
             self.sendOSC(osc_address, par_val)
-
-            # try:
-            #     client_tosc.send_message(f"{osc_address}", par_val)
-            #     client_local.send_message(f"{osc_address}", par_val)
-            #     print(f"Sent value {par_val} to {osc_address}")
-
-            # except Exception as e:
-            #     # handle/log and continue the loop so one failure doesn't abort the whole routine
-            #     print(f"Failed to send OSC to {osc_address}: {e}")
 
     def createFixtures(self):
         """
