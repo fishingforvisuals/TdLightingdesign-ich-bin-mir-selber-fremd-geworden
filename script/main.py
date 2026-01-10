@@ -127,19 +127,16 @@ class Main:
 
     def LoadPreset(self, val, channel):
         """
-        upon selecting a preset from the TouchOSC scene selector
-        send OSC messages that updates the PCs OSCIn and
-        TouchOSCs Dimmer Faders
-        manage if bank 1 or 2 is selected and therefore
-        send to the correct bank
-        TODO it would be nice to filter for certain parameters
-        TODO currently pulls dimmer values from table_storage(deprecated) - change to new storage location
-        """
+        trigger:
+            upon selecting a preset from the TouchOSC scene selector the chopexecDAT ce_radio_bank will trigger this function
+        function:
+            send OSC messages that updates the PCs OSCIn and
+            TouchOSCs Dimmer Faders
+            manage if bank 1 or 2 is selected and therefore
+            send to the correct bank
 
-        # send preset values to correct osc faders in oscin1 and touchOSC
-        # PC UI will be updated when the fader that selects the preloaded banks is moved
-        # the functions channel.index can be used to send the values to the correct bank
-        # pull dimmer data from storage/dimmer_data
+        TODO it would be nice to filter for certain parameters
+        """
 
         dimmer_data = "storage/dimmer_data"
         bank = channel.index + 1
