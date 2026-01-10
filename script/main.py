@@ -247,6 +247,10 @@ class Main:
         I want to reconnect them to the osc input and make
         the expressions active
         """
+
+        # this scenario needs to be triggered when I change the fixture values manually
+        # could be triggered when I save presets or recall presets - or explicitely create a CLEAR button
+
         target = op("fixture_data")
         source = op("colorScene")
 
