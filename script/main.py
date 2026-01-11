@@ -225,6 +225,11 @@ class Main:
                 if not hasattr(comp.par, new_name):
                     par = page.appendFloat(new_name, label=name)
 
+        def initNetwork(comp):
+            # create base network
+
+            comp.create(constantCHOP, "const_channels")
+
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
             if op(f"fixtures/{fixture_name}") is None:
@@ -238,15 +243,17 @@ class Main:
             initPage(page_name="Settings", comp=fixture, params=settings_list)
 
             channels = op(f"fixture_templates/{template}")
-            # remove parameters that contain "Fine" in the list
             page_channels_list = [
-                c.val for c in channels.col("Function") if "Fine" not in c.val
+                c.val
+                for c in channels.col("Function")[1:]  # Skip header 'Function'
+                if "Fine" not in c.val
             ]
             initPage(page_name="Channels", comp=fixture, params=page_channels_list)
 
-            master_list = ["DIMMER"]
+            master_list = ["MA DIMMER"]
             initPage(page_name="Master", comp=fixture, params=master_list)
 
+            # initNetwork(comp=fixture)
             fixture_id += 1
 
         # TODO once I create a fixture I need to update my rename CHOP and constant CHOPs that control my override CHOP
