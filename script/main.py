@@ -151,20 +151,9 @@ class Main:
             print(osc_address, par_val)
             self.sendOSC(osc_address, par_val)
 
-    def createFixtures(self):
-        """
-        TODO programmatically create fixtures from preset
-        create parameters for:
-            dimmer
-            colors
-            pan/tilt
-            gobo
-        create settings:
-            dmx address
-            footprint
-        create master parameters:
-            master dimmer
-        """
+    def createFixture_deprecated(self):
+
+        template = op.par(template)
         comp = op("container2")  # replace with your component
 
         # get the "Setting" page
@@ -191,44 +180,7 @@ class Main:
         # add info for 8-bit or 16-bit values (FINE channels maybe) - don't create 2 fader in the parameter page for that section but the dmx channels inside the fixture
         # create a selector that pulls all the 16 bit floats and create two seperate dmx channels and replace them in the master chain
         # define your float parameters: name, label, default, min, max
-        chanList = [
-            "CYAN",
-            "MAGENTA",
-            "YELLOW",
-            "CTO",
-            "COLOR WHEEL",
-            "STROBE EFFECT",
-            "DIMMER",
-            "DIMMER FINE",  # 8
-            "IRIS",
-            "ROTATING GOBO CHANGE",
-            "GOBO ROTATION",
-            "FINE GOBO ROTATION",  # 12
-            "PRISM INSERTION",
-            "PRISM ROTATION",
-            "ANIMATION WHEEL INSERTION",
-            "ANIMATION WHEEL ROTATION",
-            "FROST",
-            "FOCUS",
-            "ZOOM",
-            "BLADE 1 MOVEMENT",
-            "BLADE 1 SWIVELLING",
-            "BLADE 2 MOVEMENT",
-            "BLADE 2 SWIVELLING",
-            "BLADE 3 MOVEMENT",
-            "BLADE 3 SWIVELLING",
-            "BLADE 4 MOVEMEN",
-            "BLADE 4 SWIVELLING",
-            "FRAME ROTATION",
-            "FRAME MACROS",
-            "FRAME MACRO SPEED",
-            "PAN",
-            "PAN FINE",  # 32
-            "TILT",
-            "TILT FINE",  # 34
-            "RESET",
-            "FUNCTION",
-        ]
+        chanList = []
 
         # create each float param if it doesn't exist yet
         for name in chanList:
@@ -239,6 +191,63 @@ class Main:
                 par = page.appendFloat(new_name, label=label)
 
         # TODO create master page
+
+    def CreateFixture(self, **param_dict):
+        """
+        TODO programmatically create fixtures from preset
+        create parameters for:
+            dimmer
+            colors
+            pan/tilt
+            gobo
+        create settings:
+            dmx address
+            footprint
+        create master parameters:
+            master dimmer
+        """
+        amount = param_dict.get("Amount")
+        template = param_dict.get("Template")
+        fixture_group = param_dict.get("Group")
+        fixture_id = param_dict.get("Id")
+
+        def initPage(page_name, comp, params):
+            # get the "Setting" page
+            page = next((pg for pg in comp.customPages if pg.name == page_name), None)
+            if page is None:
+                page = comp.appendCustomPage(page_name)
+
+            # create each float param if it doesn't exist yet
+            for name in params:
+                label = name.capitalize()
+                new_name = label.replace(" ", "")
+
+                if not hasattr(comp.par, new_name):
+                    par = page.appendFloat(new_name, label=name)
+
+        for num_fixture in range(1, amount + 1):
+            fixture_name = f"{fixture_group}_{template}_{fixture_id}"
+            if op(f"fixtures/{fixture_name}") is None:
+                fixture = op("fixtures").create(containerCOMP, fixture_name)
+                fixture.nodeX = fixture_group * 150
+                fixture.nodeY = -num_fixture * 150
+            else:
+                fixture = op(f"fixtures/{fixture_name}")
+
+            settings_list = ["Group", "ID", "DMX Start Address", "Footprint"]
+            initPage(page_name="Settings", comp=fixture, params=settings_list)
+
+            channels = op(f"fixture_templates/{template}")
+            # remove parameters that contain "Fine" in the list
+            page_channels_list = [
+                c.val for c in channels.col("Function") if "Fine" not in c.val
+            ]
+            initPage(page_name="Channels", comp=fixture, params=page_channels_list)
+
+            master_list = ["DIMMER"]
+            initPage(page_name="Master", comp=fixture, params=master_list)
+
+            fixture_id += 1
 
         # TODO once I create a fixture I need to update my rename CHOP and constant CHOPs that control my override CHOP
 
