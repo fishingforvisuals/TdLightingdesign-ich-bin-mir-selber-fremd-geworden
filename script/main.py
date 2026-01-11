@@ -151,47 +151,6 @@ class Main:
             print(osc_address, par_val)
             self.sendOSC(osc_address, par_val)
 
-    def createFixture_deprecated(self):
-
-        template = op.par(template)
-        comp = op("container2")  # replace with your component
-
-        # get the "Setting" page
-        page = next((pg for pg in comp.customPages if pg.name == "Settings"), None)
-        if page is None:
-            page = comp.appendCustomPage("Settings")
-
-        settingList = ["DMX Address", "Footprint"]
-
-        # create each float param if it doesn't exist yet
-        for name in settingList:
-            label = name.capitalize()
-            new_name = label.replace(" ", "")
-            print
-            if not hasattr(comp.par, new_name):
-                par = page.appendFloat(new_name, label=name)
-
-        # get the "Custom" page (create it if it doesn't exist)
-        page = next((pg for pg in comp.customPages if pg.name == "Parameters"), None)
-        if page is None:
-            page = comp.appendCustomPage("Parameters")
-
-        # TODO this list should be pulled from locally stored preset tables,
-        # add info for 8-bit or 16-bit values (FINE channels maybe) - don't create 2 fader in the parameter page for that section but the dmx channels inside the fixture
-        # create a selector that pulls all the 16 bit floats and create two seperate dmx channels and replace them in the master chain
-        # define your float parameters: name, label, default, min, max
-        chanList = []
-
-        # create each float param if it doesn't exist yet
-        for name in chanList:
-            label = name.capitalize()
-            new_name = label.replace(" ", "")
-            print
-            if not hasattr(comp.par, new_name):
-                par = page.appendFloat(new_name, label=label)
-
-        # TODO create master page
-
     def CreateFixture(self, **param_dict):
         """
         TODO programmatically create fixtures from preset
@@ -257,6 +216,11 @@ class Main:
             fixture_id += 1
 
         # TODO once I create a fixture I need to update my rename CHOP and constant CHOPs that control my override CHOP
+
+    def updateFixture(self):
+        """
+        would be nice to have, still need to figure out how in what way I need this
+        """
 
     def resetFixtureExpressions(self):
         """
