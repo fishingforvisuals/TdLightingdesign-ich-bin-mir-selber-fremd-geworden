@@ -223,12 +223,21 @@ class Main:
             create all dmx channels in the constant CHOP of the fixture this CHOP will act as the starting naming point to match the names in the storage
             naming convention: fixture_name:dmxchannel.name
             """
-            constant = comp.op("const_channels")
-            
-            
-            for channel in channels:
-                
-            constant.
+            const = comp.op("const_channels")
+
+            # reset CHOP channels
+            const.par.name0.sequence.numBlocks = 1
+
+            curChan = 0
+            # build new CHOP channels and name them
+            for channel in channels.col("Function")[1:]:
+                pValue = f"const{curChan}value"
+                pName = f"const{curChan}name"
+                print(pValue, pName)
+                const.par[pValue] = 0
+                const.par[pName] = f"{parent().name}:{channel}"
+
+                curChan += 1
 
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
