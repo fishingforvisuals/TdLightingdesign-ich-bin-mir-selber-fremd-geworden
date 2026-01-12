@@ -240,7 +240,7 @@ class Main:
                 pName = f"const{curChan}name"
                 print(pValue, pName)
                 const.par[pValue] = 0
-                const.par[pName] = f"{parent().name}:{channel_name}"
+                const.par[pName] = f"{comp.name}:{channel_name}"
 
                 curChan += 1
 
@@ -285,7 +285,7 @@ class Main:
 
     def ResetFixtureExpressions(self, operators):
         """
-        TODO once I set values manually via the fixture settings
+        once I set values manually via the fixture settings
         I want to reconnect them to the osc input and make
         the expressions active
         """
@@ -303,27 +303,8 @@ class Main:
                     par for par in op.customPars if par.page.name == "Channels"
                 ]
                 for channel in channels_pars:
-                    # print(channel.name)
-                    expression = f"op('in1')['[{me.name}:{me.curPar.name}']"
-                    op.par[channel].mode = ParMode.EXPRESSION
-                    op.par[channel].expr = expression
-
-
-# print(f"No Channels page on {op}")
-# this scenario needs to be triggered when I change the fixture values manually
-# could be triggered when I save presets or recall presets - or explicitely create a CLEAR button
-
-
-# target = op("fixture_data")
-# source = op("colorScene")
-
-# """when constant changes are applied to the colors reference a pixel from the source to the corresponding path"""
-# for i in range(1, target.numRows):
-#     operator = op(target[i, "path"])
-#     param = str(target[i, "name"])
-#     print(operator, param, type(param))
-#     param = param.split(":", 1)[-1]
-#     print(param, type(param))
-
-#     operator.pars(param)[0].mode = ParMode.EXPRESSION
-#     operator.pars(param)[0].expr = f"op('colorScene')[0][{i-1}]"
+                    print(channel.name)
+                    # expression = f"op('in1')['{op.name}:{channel.name}']"
+                    expression = f"op('in1')[f'{{me.name}}:{{me.curPar.name}}']"
+                    op.par[channel.name].mode = ParMode.EXPRESSION
+                    op.par[channel.name].expr = expression
