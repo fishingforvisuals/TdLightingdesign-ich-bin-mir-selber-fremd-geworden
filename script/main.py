@@ -151,6 +151,9 @@ class Main:
             print(osc_address, par_val)
             self.sendOSC(osc_address, par_val)
 
+    def CapitalizeNoSpace(self, word):
+        return word.replace(" ", "").capitalize()
+
     def CreateFixture(self, **param_dict):
         """
         TODO programmatically create fixtures from preset
@@ -178,11 +181,12 @@ class Main:
 
             # create each float param if it doesn't exist yet
             for name in t_params:
-                label = name.capitalize()
-                new_name = label.replace(" ", "")
+                new_name = self.CapitalizeNoSpace(name)
 
                 if not hasattr(comp.par, new_name):
                     par = page.appendFloat(new_name, label=name)
+
+                    # TODO create min, max, default values for each parameter - maybe create a dictionary
 
             page = comp.customPages[page_name]
             for param in page:
@@ -231,11 +235,12 @@ class Main:
             curChan = 0
             # build new CHOP channels and name them
             for channel in channels.col("Function")[1:]:
+                channel_name = self.CapitalizeNoSpace(channel.val)
                 pValue = f"const{curChan}value"
                 pName = f"const{curChan}name"
                 print(pValue, pName)
                 const.par[pValue] = 0
-                const.par[pName] = f"{parent().name}:{channel}"
+                const.par[pName] = f"{parent().name}:{channel_name}"
 
                 curChan += 1
 
@@ -272,9 +277,10 @@ class Main:
 
         # TODO once I create a fixture I need to update my rename CHOP and constant CHOPs that control my override CHOP
 
-    def updateFixture(self):
+    def updateFixtures(self):
         """
         would be nice to have, still need to figure out how in what way I need this
+        update the network by deleting all operators inside a network and then copy all the operators from base again
         """
 
     def resetFixtureExpressions(self):
