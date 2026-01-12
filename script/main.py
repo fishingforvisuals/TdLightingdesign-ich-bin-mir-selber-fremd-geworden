@@ -283,26 +283,47 @@ class Main:
         update the network by deleting all operators inside a network and then copy all the operators from base again
         """
 
-    def resetFixtureExpressions(self):
+    def ResetFixtureExpressions(self, operators):
         """
         TODO once I set values manually via the fixture settings
         I want to reconnect them to the osc input and make
         the expressions active
         """
 
-        # this scenario needs to be triggered when I change the fixture values manually
-        # could be triggered when I save presets or recall presets - or explicitely create a CLEAR button
+        for op in operators.children:
+            print(op, op.customPages)
+            # Check if 'Channels' page exists by name
+            channels_page = next(
+                (page for page in op.customPages if page.name == "Channels"), None
+            )
+            if channels_page is not None:
+                # print(f"Channels page found on {op}")
+                # Now iterate parameters on that page (or use op.par for direct access)
+                channels_pars = [
+                    par for par in op.customPars if par.page.name == "Channels"
+                ]
+                for channel in channels_pars:
+                    # print(channel.name)
+                    expression = f"op('in1')['[{me.name}:{me.curPar.name}']"
+                    op.par[channel].mode = ParMode.EXPRESSION
+                    op.par[channel].expr = expression
 
-        target = op("fixture_data")
-        source = op("colorScene")
 
-        """when constant changes are applied to the colors reference a pixel from the source to the corresponding path"""
-        for i in range(1, target.numRows):
-            operator = op(target[i, "path"])
-            param = str(target[i, "name"])
-            print(operator, param, type(param))
-            param = param.split(":", 1)[-1]
-            print(param, type(param))
+# print(f"No Channels page on {op}")
+# this scenario needs to be triggered when I change the fixture values manually
+# could be triggered when I save presets or recall presets - or explicitely create a CLEAR button
 
-            operator.pars(param)[0].mode = ParMode.EXPRESSION
-            operator.pars(param)[0].expr = f"op('colorScene')[0][{i-1}]"
+
+# target = op("fixture_data")
+# source = op("colorScene")
+
+# """when constant changes are applied to the colors reference a pixel from the source to the corresponding path"""
+# for i in range(1, target.numRows):
+#     operator = op(target[i, "path"])
+#     param = str(target[i, "name"])
+#     print(operator, param, type(param))
+#     param = param.split(":", 1)[-1]
+#     print(param, type(param))
+
+#     operator.pars(param)[0].mode = ParMode.EXPRESSION
+#     operator.pars(param)[0].expr = f"op('colorScene')[0][{i-1}]"
