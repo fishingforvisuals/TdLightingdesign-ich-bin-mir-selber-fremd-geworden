@@ -205,6 +205,7 @@ class Main:
                 fixture_id - 1
             )
 
+            # TODO missing universe parameter
             defaults = {
                 "Pan": 0.5,
                 "Tilt": 0.5,
@@ -216,7 +217,10 @@ class Main:
             }
 
             for param, value in defaults.items():
-                comp.par[param.capitalize()] = value
+
+                if comp.par[self.CapitalizeNoSpace(param)] is not None:
+                    # print(comp, param, value, comp.par[self.CapitalizeNoSpace(param)])
+                    comp.par[self.CapitalizeNoSpace(param)] = value
 
             # Group, ID, DMX Start Address from CreateFixture() Function
 
@@ -257,7 +261,6 @@ class Main:
 
             parCHOP.par.parameters = parameter_selection
             parCHOP.par.renameto = renameto_selection
-            print(renameto_selection)
 
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
