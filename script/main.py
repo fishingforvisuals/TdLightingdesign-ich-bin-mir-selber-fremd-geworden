@@ -238,11 +238,26 @@ class Main:
                 channel_name = self.CapitalizeNoSpace(channel.val)
                 pValue = f"const{curChan}value"
                 pName = f"const{curChan}name"
-                print(pValue, pName)
                 const.par[pValue] = 0
                 const.par[pName] = f"{comp.name}:{channel_name}"
-
                 curChan += 1
+
+            # insert selection for parameterCHOP
+            parCHOP = comp.op("par1")
+            parameter_selection = ""
+            renameto_selection = ""
+
+            channels_page = next(
+                (page for page in comp.customPages if page.name == "Channels"), None
+            )
+
+            for channel in channels_page.pars:
+                parameter_selection += f"{channel.name} "
+                renameto_selection += f"{comp.name}:{channel.name} "
+
+            parCHOP.par.parameters = parameter_selection
+            parCHOP.par.renameto = renameto_selection
+            print(renameto_selection)
 
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
@@ -291,7 +306,6 @@ class Main:
         """
 
         for op in operators.children:
-            print(op, op.customPages)
             # Check if 'Channels' page exists by name
             channels_page = next(
                 (page for page in op.customPages if page.name == "Channels"), None
@@ -304,7 +318,7 @@ class Main:
                 ]
                 for channel in channels_pars:
                     print(channel.name)
-                    # expression = f"op('in1')['{op.name}:{channel.name}']"
+                    # insert a string as expression
                     expression = f"op('in1')[f'{{me.name}}:{{me.curPar.name}}']"
                     op.par[channel.name].mode = ParMode.EXPRESSION
                     op.par[channel.name].expr = expression
