@@ -170,8 +170,6 @@ class Main:
         fixture_group = param_dict.get("Group")
         fixture_id = param_dict.get("Id")
 
-        # def createCOMP()
-
         def initPage(page_name, comp, t_params):
             # get the "Setting" page
             page = next((pg for pg in comp.customPages if pg.name == page_name), None)
@@ -186,31 +184,51 @@ class Main:
                 if not hasattr(comp.par, new_name):
                     par = page.appendFloat(new_name, label=name)
 
-            if page_name == "Channels":
-                page = comp.customPages["Channels"]
-                print(comp.customPars)
-                for param in page:
-                    if param.label not in t_params:
-                        print(param.name, False)
-                        comp.par[param.name].destroy()
-                    else:
-                        print(param.name, True)
+            page = comp.customPages[page_name]
+            for param in page:
+                if param.label not in t_params:
+                    comp.par[param.name].destroy()
 
         def initNetwork(comp):
             """generate network operator with op().create() or optionally copy an operator with the network already inside then I don't need this"""
             # create base network
 
-        def initDefaultValues():
+        def initDefaultValues(comp, fixture_id, channels, **param_dict):
             """set default values for each created parameter"""
-            # Pan Tilt to 0.5
 
-            # all Master Dimmers to 1
+            footprint = channels.numRows - 1
+            dmx_address = param_dict.get("Dmxstartaddress") + footprint * (
+                fixture_id - 1
+            )
+
+            defaults = {
+                "Pan": 0.5,
+                "Tilt": 0.5,
+                "Madimmer": 1,
+                "Group": param_dict.get("Group"),
+                "Id": fixture_id,
+                "DMXstartaddress": dmx_address,
+                "Footprint": footprint,
+            }
+
+            for param, value in defaults.items():
+                comp.par[param.capitalize()] = value
 
             # Group, ID, DMX Start Address from CreateFixture() Function
 
             # Footprint from template table length
 
-            # comp.create(constantCHOP, "const_channels")
+        def initDmxChannels(comp, channels):
+            """
+            create all dmx channels in the constant CHOP of the fixture this CHOP will act as the starting naming point to match the names in the storage
+            naming convention: fixture_name:dmxchannel.name
+            """
+            constant = comp.op("const_channels")
+            
+            
+            for channel in channels:
+                
+            constant.
 
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
@@ -235,6 +253,10 @@ class Main:
 
             master_list = ["MA DIMMER"]
             initPage(page_name="Master", comp=fixture, t_params=master_list)
+
+            initDefaultValues(fixture, fixture_id, channels, **param_dict)
+
+            initDmxChannels(fixture, channels)
 
             # initNetwork(comp=fixture)
             fixture_id += 1
