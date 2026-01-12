@@ -170,36 +170,60 @@ class Main:
         fixture_group = param_dict.get("Group")
         fixture_id = param_dict.get("Id")
 
-        def initPage(page_name, comp, params):
+        # def createCOMP()
+
+        def initPage(page_name, comp, t_params):
             # get the "Setting" page
             page = next((pg for pg in comp.customPages if pg.name == page_name), None)
             if page is None:
                 page = comp.appendCustomPage(page_name)
 
             # create each float param if it doesn't exist yet
-            for name in params:
+            for name in t_params:
                 label = name.capitalize()
                 new_name = label.replace(" ", "")
 
                 if not hasattr(comp.par, new_name):
                     par = page.appendFloat(new_name, label=name)
 
+            if page_name == "Channels":
+                page = comp.customPages["Channels"]
+                print(comp.customPars)
+                for param in page:
+                    if param.label not in t_params:
+                        print(param.name, False)
+                        comp.par[param.name].destroy()
+                    else:
+                        print(param.name, True)
+
         def initNetwork(comp):
+            """generate network operator with op().create() or optionally copy an operator with the network already inside then I don't need this"""
             # create base network
 
-            comp.create(constantCHOP, "const_channels")
+        def initDefaultValues():
+            """set default values for each created parameter"""
+            # Pan Tilt to 0.5
+
+            # all Master Dimmers to 1
+
+            # Group, ID, DMX Start Address from CreateFixture() Function
+
+            # Footprint from template table length
+
+            # comp.create(constantCHOP, "const_channels")
 
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
             if op(f"fixtures/{fixture_name}") is None:
-                fixture = op("fixtures").create(containerCOMP, fixture_name)
+                # fixture = op("fixtures").create(containerCOMP, fixture_name)
+                fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
                 fixture.nodeX = fixture_group * 150
                 fixture.nodeY = -num_fixture * 150
             else:
                 fixture = op(f"fixtures/{fixture_name}")
 
             settings_list = ["Group", "ID", "DMX Start Address", "Footprint"]
-            initPage(page_name="Settings", comp=fixture, params=settings_list)
+            initPage(page_name="Settings", comp=fixture, t_params=settings_list)
 
             channels = op(f"fixture_templates/{template}")
             page_channels_list = [
@@ -207,10 +231,10 @@ class Main:
                 for c in channels.col("Function")[1:]  # Skip header 'Function'
                 if "Fine" not in c.val
             ]
-            initPage(page_name="Channels", comp=fixture, params=page_channels_list)
+            initPage(page_name="Channels", comp=fixture, t_params=page_channels_list)
 
             master_list = ["MA DIMMER"]
-            initPage(page_name="Master", comp=fixture, params=master_list)
+            initPage(page_name="Master", comp=fixture, t_params=master_list)
 
             # initNetwork(comp=fixture)
             fixture_id += 1
