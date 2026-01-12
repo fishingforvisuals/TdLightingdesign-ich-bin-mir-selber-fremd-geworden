@@ -27,3 +27,4 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - UI for OSC Settings with static ip address
 - park fixtures
 - create a fixture renaming function that also updates the storage table
+- create overview plan from network in README.md
