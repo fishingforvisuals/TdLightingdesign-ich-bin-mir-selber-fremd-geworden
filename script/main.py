@@ -268,12 +268,18 @@ class Main:
             if op(f"fixtures/{fixture_name}") is None:
                 # fixture = op("fixtures").create(containerCOMP, fixture_name)
                 fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
-                fixture.nodeX = fixture_group * 150
-                fixture.nodeY = -num_fixture * 150
+                fixture.nodeX = -fixture_group * 200
+                fixture.nodeY = -num_fixture * 160
             else:
                 fixture = op(f"fixtures/{fixture_name}")
 
-            settings_list = ["Group", "ID", "DMX Start Address", "Footprint"]
+            settings_list = [
+                "Group",
+                "ID",
+                "DMX Start Address",
+                "Universe",
+                "Footprint",
+            ]
             initPage(page_name="Settings", comp=fixture, t_params=settings_list)
 
             channels = op(f"fixture_templates/{template}")
@@ -321,7 +327,6 @@ class Main:
                     par for par in op.customPars if par.page.name == "Channels"
                 ]
                 for channel in channels_pars:
-                    print(channel.name)
                     # insert a string as expression
                     expression = f"op('in1')[f'{{me.name}}:{{me.curPar.name}}']"
                     op.par[channel.name].mode = ParMode.EXPRESSION

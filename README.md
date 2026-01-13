@@ -5,10 +5,11 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - UI for setting up parameters:
     - Moving Heads
     - Auto Layout for dimmers
-- test save function (hog CHOP)
-    - create OSC feedback
 - patch next show
     - reuse backlighting settings from previous show
+- test save function (hog CHOP)
+    - create OSC feedback
+
 
 
 ## TODOs
@@ -19,7 +20,7 @@ creating a lighting environment that is portable and minimalistic yet able to do
     - presets for Color, Position, FX
 - rework TouchOSC patch with grid:text and auto generating and naming faders
 - scene storage selector input should be rounded
-- add universe to fixture settings page and optimize dmx out CHOP
+- 
 - optimize projector fading from off to on - projector needs a little time to turn on which results in a brightness jump when it turns on 
 - UI for OSC Settings with static ip address
 - park fixtures
@@ -27,7 +28,26 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - create overview plan from network in README.md
 
 ## Documentation
-- post fixture data handling
-    - Grandmaster
-    - 16-bit to 2x8-bit channels
-        - mark coarse and fine value in fixture template tables for 16 bit fixtures e.g. Pan Coarse and Pan Fine Channels
+### fixtures
+- can be created from fixture_templates COMP
+    - set parameters from fixture_template tableDAT:
+    - set settings:
+        - Group
+        - ID
+        - Universe
+        - dmx address
+        - footprint
+    - create master parameters - they work as submasters (not yet used):
+        - master dimmer
+
+### post fixture data processing
+select specific channel functions from the table process them and inject them back into the network
+
+current features:
+- Grandmaster
+- 16-bit to 2x8-bit channels
+    - mark coarse and fine value in fixture template tables for 16 bit fixtures e.g. Pan Coarse and Pan Fine Channels
+
+### dmx output
+able to output multi-universe channels
+prepare the available universes based on the used controllers
