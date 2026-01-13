@@ -213,6 +213,7 @@ class Main:
                 "Group": param_dict.get("Group"),
                 "Id": fixture_id,
                 "DMXstartaddress": dmx_address,
+                "Universe": param_dict.get("Universe"),
                 "Footprint": footprint,
             }
 

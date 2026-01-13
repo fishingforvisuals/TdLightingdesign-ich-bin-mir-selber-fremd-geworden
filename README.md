@@ -1,10 +1,11 @@
 # TdLightingdesign-ich-bin-mir-selber-fremd-geworden
 creating a lighting environment that is portable and minimalistic yet able to do complex stuff: combines lighting, visuals, TouchOSC interface, managing presets, CHOP DMX
 
-## urgent TODOs
+## TODOs urgent
 - create POST section
     - master dimmer
     - 16-bit to 2x8-bit channels
+        - mark coarse and fine value in fixture template tables for 16 bit fixtures e.g. Pan Coarse and Pan Fine Channels
 - UI for setting up parameters:
     - Moving Heads
     - Auto Layout for dimmers
