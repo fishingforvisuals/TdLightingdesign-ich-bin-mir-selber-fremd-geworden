@@ -197,12 +197,12 @@ class Main:
             """generate network operator with op().create() or optionally copy an operator with the network already inside then I don't need this"""
             # create base network
 
-        def initDefaultValues(comp, fixture_id, channels, **param_dict):
+        def initDefaultValues(comp, fixture_id, num_fixture, channels, **param_dict):
             """set default values for each created parameter"""
 
             footprint = channels.numRows - 1
             dmx_address = param_dict.get("Dmxstartaddress") + footprint * (
-                fixture_id - 1
+                num_fixture - 1
             )
 
             # TODO missing universe parameter
@@ -269,7 +269,7 @@ class Main:
                 # fixture = op("fixtures").create(containerCOMP, fixture_name)
                 fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
                 fixture.nodeX = -fixture_group * 200
-                fixture.nodeY = -num_fixture * 160
+                fixture.nodeY = -fixture_id * 160
             else:
                 fixture = op(f"fixtures/{fixture_name}")
 
@@ -293,7 +293,7 @@ class Main:
             master_list = ["MA DIMMER"]
             initPage(page_name="Master", comp=fixture, t_params=master_list)
 
-            initDefaultValues(fixture, fixture_id, channels, **param_dict)
+            initDefaultValues(fixture, fixture_id, num_fixture, channels, **param_dict)
 
             initDmxChannels(fixture, channels)
 
