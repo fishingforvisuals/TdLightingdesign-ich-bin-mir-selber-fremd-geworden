@@ -308,6 +308,26 @@ class Main:
         update the network by deleting all operators inside a network and then copy all the operators from base again
         """
 
+    def CheckUniverse(self):
+        """
+        TODO this needs to be optimized quite a bit
+        """
+        opselect = op("fixtures/select1_dmx_addresses")
+        chans = opselect.chans()
+        try:
+            # check channels for duplicates
+            dmx_list = [ch.name.split(":")[2] for ch in chans]
+            print(dmx_list)
+            # find duplicates
+        except:
+            dmx_list = [ch.name for ch in chans]
+            for ch in dmx_list:
+                if ch.startswith("u1"):
+                    ch_num = ch.removeprefix("u1")
+                    check_uni = op(f"fixtures/check_universe/{ch_num}")
+                    target_param = check_uni.par.value0
+                    target_param.val = 1
+
     def ResetFixtureExpressions(self, operators):
         """
         once I set values manually via the fixture settings
