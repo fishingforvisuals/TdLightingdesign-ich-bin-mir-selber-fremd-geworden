@@ -3,6 +3,8 @@ creating a lighting environment that is portable and minimalistic yet able to do
 
 ## TODOs urgent   
 - patch next show
+    - there's currently a duplicate channel in the universe
+        - develop feature to check for duplicates
     - reuse backlighting settings from previous show
 - test save function (hog CHOP)
 - create OSC feedback for:
