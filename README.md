@@ -3,13 +3,12 @@ creating a lighting environment that is portable and minimalistic yet able to do
 
 ## TODOs urgent   
 - patch next show
-    - there's currently a duplicate channel in the universe
-        - develop feature to check for duplicates
     - reuse backlighting settings from previous show
 - test save function (hog CHOP)
-- create OSC feedback for:
-    - save function
-    - fog maching lock
+- test load function
+- update all UI inputs based on the last one that changed
+    - use mapping table
+
 
 
 
@@ -22,8 +21,6 @@ creating a lighting environment that is portable and minimalistic yet able to do
     - grouping fixtures and controlling them simultaneously
     - presets for Color, Position, FX
 - rework TouchOSC patch with grid:text and auto generating and naming faders
-- update all UI inputs based on the last one that changed
-    - use mapping table
 - optimize projector fading from off to on - projector needs a little time to turn on which results in a brightness jump when it turns on 
 - UI for OSC Settings with static ip address
 - park fixtures
@@ -31,15 +28,23 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - create overview plan from network in README.md
 - rework network to select visuals - create a projector fixture but don't send it to the dmx channels but it should still populate into the UI
 - optimize save function to only store/update changed values to change processing time
+- create OSC feedback for:
+    - save function
+    - fog machine lock
 
 ## Documentation
+
+### createFixtures
+if there are no "Dimmer" or "Intensity" in dmxfunctions a virtual one will be created
+TODO virtual dimmer should only affect color parameters - fixtures with strobe need to be selected carefully 
+
 ### TD Lighting UI
 - Master Fader
     - lets you fade between banks with preloaded scenes
 - Dimmer page
     - radio buttons for selecting scenes in two preload banks
     - auto-populates dimmer faders based on how many fixtures with dimmers there are
-- Save page (yet to be developed)
+- Save page
     - save button
     - feedback
     - text editor to see errors on the fly
@@ -73,3 +78,4 @@ current features:
 ### dmx output
 able to output multi-universe channels
 prepare the available universes based on the used controllers
+

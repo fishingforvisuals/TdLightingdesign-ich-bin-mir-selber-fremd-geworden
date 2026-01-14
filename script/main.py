@@ -198,6 +198,14 @@ class Main:
 
                     # TODO create min, max, default values for each parameter - maybe create a dictionary
 
+            # ensure Dimmer or Intensity are on the page "Channels"
+            if page == "Channels":
+                if not hasattr(comp.par, "Dimmer") and not hasattr(
+                    comp.par, "Intensity"
+                ):
+                    par = page.appendFloat("Dimmer", label="Dimmer")
+                    t_params.append("Dimmer")
+
             page = comp.customPages[page_name]
             for param in page:
                 if param.label not in t_params:
@@ -275,9 +283,25 @@ class Main:
 
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
+
+            channels = op(f"fixture_templates/{template}")
+            page_channels_list = [
+                c.val
+                for c in channels.col("Function")[1:]  # Skip header 'Function'
+                if "Fine" not in c.val
+            ]
+
             if op(f"fixtures/{fixture_name}") is None:
                 # fixture = op("fixtures").create(containerCOMP, fixture_name)
-                fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
+                if (
+                    "Dimmer" not in page_channels_list
+                    and "Intensity" not in page_channels_list
+                ):
+                    fixture = op("fixtures").copy(
+                        op("base_network_vdim"), name=fixture_name
+                    )
+                else:
+                    fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
                 fixture.nodeX = -fixture_group * 200
                 fixture.nodeY = -fixture_id * 160
             else:
@@ -292,14 +316,8 @@ class Main:
             ]
             initPage(page_name="Settings", comp=fixture, t_params=settings_list)
 
-            channels = op(f"fixture_templates/{template}")
-            page_channels_list = [
-                c.val
-                for c in channels.col("Function")[1:]  # Skip header 'Function'
-                if "Fine" not in c.val
-            ]
             initPage(page_name="Channels", comp=fixture, t_params=page_channels_list)
-
+            print(channels)
             master_list = ["MA DIMMER"]
             initPage(page_name="Master", comp=fixture, t_params=master_list)
 
