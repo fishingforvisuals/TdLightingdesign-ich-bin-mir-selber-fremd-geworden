@@ -119,7 +119,7 @@ class Main:
         except Exception as e:
             print(e)
 
-    def sendOSC(self, osc_address, osc_val):
+    def SendOSC(self, osc_address, osc_val):
         client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
         client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
 
@@ -152,14 +152,11 @@ class Main:
         bank = channel.index + 1
         preset = f"preset{int(val + 1)}"
 
-        print(bank, preset)
-
         for dimmer in range(op(dimmer_data).numRows)[1:15]:
             # Get the target parameter name and value from the table
             osc_address = f"/grid{bank}/{dimmer}"
             par_val = float(op(dimmer_data)[dimmer, preset].val)
-            print(osc_address, par_val)
-            self.sendOSC(osc_address, par_val)
+            self.SendOSC(osc_address, par_val)
 
     def UpdateUiDimmerFromStorage(self):
         """
@@ -170,8 +167,31 @@ class Main:
         for fader in ui_fader_list:
             channel_name = fader.par.Valname0.eval()
             fader_val = dimmer_data[channel_name, "value"]
-            print(channel_name, fader_val)
             fader.par.Value0 = fader_val
+
+    def UpdateBank(self, target, bank, value):
+        print(target, bank.name, value)
+        # change pc ui
+        if target == "UI":
+
+            op(f"/lighting_UI/presets/{bank.name}").par.Value0 = value
+            pass
+
+        # change touchOSC
+        osc_address = bank.name
+        if target == "OSC":
+            self.SendOSC(osc_address, value)
+
+    def UpdateBankFader(self, target, chan, value):
+        print(target, chan.name, value)
+        if target == "UI":
+
+            op(str(chan.name)).par.Value0 = value
+
+        osc_address = str(chan.name)
+        if target == "OSC":
+            self.SendOSC(osc_address, float(value))
+            pass
 
     def CapitalizeNoSpace(self, word):
         return word.replace(" ", "").capitalize()

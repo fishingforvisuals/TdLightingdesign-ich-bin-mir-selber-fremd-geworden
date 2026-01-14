@@ -4,9 +4,7 @@ creating a lighting environment that is portable and minimalistic yet able to do
 ## TODOs urgent   
 - patch next show
     - reuse backlighting settings from previous show
-- test save function (hog CHOP)
-- test load function
-- update all UI inputs based on the last one that changed
+- update all UI inputs based on the last one that changed (partially solved)
     - use mapping table
 
 
