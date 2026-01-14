@@ -7,9 +7,6 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - update all UI inputs based on the last one that changed (partially solved)
     - use mapping table
 
-
-
-
 ## TODOs
 - collect example photos for "fremd geworden" scenes
 - UI for setting up parameters:
@@ -29,6 +26,13 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - create OSC feedback for:
     - save function
     - fog machine lock
+
+### ideas
+- sometimes triggering a python script is heavy on the cpu and results in frame drops
+    - some functions don't need to executed realtime
+    - looping through the task and setting an increasin delayFrame could help like
+    for i in list:
+        run(script, delayFrame=i)
 
 ## Documentation
 
