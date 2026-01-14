@@ -36,7 +36,10 @@ creating a lighting environment that is portable and minimalistic yet able to do
 
 ### createFixtures
 if there are no "Dimmer" or "Intensity" in dmxfunctions a virtual one will be created
-TODO virtual dimmer should only affect color parameters - fixtures with strobe need to be selected carefully 
+TODO virtual dimmer should only affect color parameters - fixtures with strobe need to be selected carefully
+
+### load Banks
+when moving the master fader the pc ui will be updated upon release
 
 ### TD Lighting UI
 - Master Fader

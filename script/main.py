@@ -154,12 +154,24 @@ class Main:
 
         print(bank, preset)
 
-        for dimmer in range(op(dimmer_data).numRows)[1:]:
+        for dimmer in range(op(dimmer_data).numRows)[1:15]:
             # Get the target parameter name and value from the table
             osc_address = f"/grid{bank}/{dimmer}"
             par_val = float(op(dimmer_data)[dimmer, preset].val)
             print(osc_address, par_val)
             self.sendOSC(osc_address, par_val)
+
+    def UpdateUiDimmerFromStorage(self):
+        """
+        gets triggered when bank selector gets released
+        """
+        ui_fader_list = ops("/lighting_UI/Dimmer/fader/item*")
+        dimmer_data = op("/lighting/storage/select3")
+        for fader in ui_fader_list:
+            channel_name = fader.par.Valname0.eval()
+            fader_val = dimmer_data[channel_name, "value"]
+            print(channel_name, fader_val)
+            fader.par.Value0 = fader_val
 
     def CapitalizeNoSpace(self, word):
         return word.replace(" ", "").capitalize()
