@@ -33,6 +33,7 @@ class Main:
             target.valid
             self._fillPresetTable(target, source, col_selection, preset_name)
             print(f"preset existed and overwriting {preset_name}")
+            self._sendSaveFeedback()
         except Exception as e:
             """create table if it doesn't exist"""
             new_table = storage.create(tableDAT, preset_name)
@@ -106,8 +107,17 @@ class Main:
         TODO upon saving parameters send feedback to textport,
         UI and TouchOSC
         """
+
         # optimize OSC messaging and use the general osc module
         # with different targets and functionalities
+        def set_save_progress(value):
+            op("/lighting_UI/Save/save_progress").par.value0 = value
+
+        try:
+            set_save_progress(1)
+            run(set_save_progress, 0, delayFrames=60)
+        except Exception as e:
+            print(e)
 
     def sendOSC(self, osc_address, osc_val):
         client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
