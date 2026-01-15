@@ -111,7 +111,7 @@ class Main:
         # optimize OSC messaging and use the general osc module
         # with different targets and functionalities
         def set_save_progress(value):
-            op("/lighting_UI/Save/save_progress").par.value0 = value
+            op("/lighting/lighting_UI/Save/save_progress").par.value0 = value
 
         try:
             set_save_progress(1)
@@ -120,8 +120,8 @@ class Main:
             print(e)
 
     def SendOSC(self, osc_address, osc_val):
-        client_tosc = udp_client.SimpleUDPClient("192.168.178.105", 8001)
-        client_local = udp_client.SimpleUDPClient("192.168.178.107", 10000)
+        client_tosc = udp_client.SimpleUDPClient("192.168.1.101", 8001)
+        client_local = udp_client.SimpleUDPClient("192.168.1.100", 10000)
 
         try:
             client_tosc.send_message(address=osc_address, value=osc_val)
@@ -162,11 +162,13 @@ class Main:
         """
         gets triggered when bank selector gets released
         """
-        ui_fader_list = ops("/lighting_UI/Dimmer/fader/item*")
+        ui_fader_list = ops("/lighting/lighting_UI/Dimmer/fader/item*")
         dimmer_data = op("/lighting/storage/select3")
         for fader in ui_fader_list:
+            # print(fader)
             channel_name = fader.par.Valname0.eval()
             fader_val = dimmer_data[channel_name, "value"]
+            print(fader, fader.par.Value0)
             fader.par.Value0 = fader_val
 
     def UpdateBank(self, target, bank, value):
@@ -174,7 +176,7 @@ class Main:
         # change pc ui
         if target == "UI":
 
-            op(f"/lighting_UI/presets/{bank.name}").par.Value0 = value
+            op(f"/lighting/lighting_UI/presets/{bank.name}").par.Value0 = value
             pass
 
         # change touchOSC
