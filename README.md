@@ -9,8 +9,6 @@ creating a lighting environment that is portable and minimalistic yet able to do
 ## TODOs urgent   
 - patch Gera show
 - test: after setting windows machine to sleep the dmxout CHOP seems to have problems with sending dmx packages
-- 
-- problem with ui_bank buttons: sometimes can't select first button
 
 ## TODOs
 - collect example photos for "fremd geworden" scenes
@@ -49,7 +47,7 @@ creating a lighting environment that is portable and minimalistic yet able to do
     - lock fog machine
     - set ip addresses
     - control Grandmaster level
-    - 
+
 ### createFixtures
 if there are no "Dimmer" or "Intensity" in dmxfunctions a virtual one will be created
 TODO virtual dimmer should only affect color parameters - fixtures with strobe need to be selected carefully
@@ -105,3 +103,5 @@ current features:
 able to output multi-universe channels
 prepare the available universes based on the used controllers
 
+# Solved:
+- problem with ui_bank buttons: sometimes can't select first button - solution lighting COMP can't be window for UI but the master inside can, there you can select all buttons
