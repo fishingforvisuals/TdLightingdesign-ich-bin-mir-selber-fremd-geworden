@@ -111,7 +111,9 @@ class Main:
         # optimize OSC messaging and use the general osc module
         # with different targets and functionalities
         def set_save_progress(value):
-            op("/lighting/lighting_UI/Save/save_progress").par.value0 = value
+            op(
+                "/lighting/lighting_UI/Settings/storage_ui/Save/save_progress"
+            ).par.value0 = value
 
         try:
             set_save_progress(1)
@@ -120,8 +122,19 @@ class Main:
             print(e)
 
     def SendOSC(self, osc_address, osc_val):
-        client_tosc = udp_client.SimpleUDPClient("192.168.1.101", 8001)
-        client_local = udp_client.SimpleUDPClient("192.168.1.100", 10000)
+        tosc_ip_address = str(
+            op(
+                "/lighting/lighting_UI/Settings/ip_address_fields/tosc_ip_field"
+            ).par.Value0
+        )
+        pc_ip_address = str(
+            op(
+                "/lighting/lighting_UI/Settings/ip_address_fields/pc_ip_field"
+            ).par.Value0
+        )
+
+        client_tosc = udp_client.SimpleUDPClient(tosc_ip_address, 8001)
+        client_local = udp_client.SimpleUDPClient(pc_ip_address, 10000)
 
         try:
             client_tosc.send_message(address=osc_address, value=osc_val)
