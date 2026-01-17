@@ -65,3 +65,4 @@ Backup/
 Ich bin mir selber fremd geworden_vEnv/
 logs/
 mapping/
+*.[0-9]*.toe
