@@ -9,7 +9,6 @@ creating a lighting environment that is portable and minimalistic yet able to do
 ## TODOs urgent   
 - patch Gera show
 - test: after setting windows machine to sleep the dmxout CHOP seems to have problems with sending dmx packages
-- create update script to update select operators in storage
 
 ## TODOs
 - collect example photos for "fremd geworden" scenes
@@ -106,3 +105,4 @@ prepare the available universes based on the used controllers
 
 # Solved:
 - problem with ui_bank buttons: sometimes can't select first button - solution lighting COMP can't be window for UI but the master inside can, there you can select all buttons
+- create update script to update select operators in storage
