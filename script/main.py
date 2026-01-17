@@ -334,8 +334,11 @@ class Main:
             this function unlocks and re-locks the parameters and is only necessary when fixtures are changed or added
             """
             target = op("storage/param_locked")
+            target.setInputs([])
             target.lock = 0
+            # maybe I need a delay here
             target.lock = 1
+            op("storage/parameters").outputConnectors[0].connect(target)
             print("reinitialized storage")
 
         for num_fixture in range(1, amount + 1):
@@ -359,7 +362,7 @@ class Main:
                     )
                 else:
                     fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
-                fixture.nodeX = -fixture_id * 200
+                fixture.nodeX = -4000 + fixture_id * 200
                 fixture.nodeY = -fixture_group * 160
             else:
                 fixture = op(f"fixtures/{fixture_name}")
