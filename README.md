@@ -1,11 +1,14 @@
 # TdLightingdesign-ich-bin-mir-selber-fremd-geworden
 creating a lighting environment that is portable and minimalistic yet able to do complex stuff: combines lighting, visuals, TouchOSC interface, managing presets, CHOP DMX
 
+## commment on stability and  feature staging
+- creating fixtures and outputting dmx works really well
+- loading presets is also very stable
+
 ## TODOs urgent   
-- patch next show
-    - reuse backlighting settings from previous show
-- update all UI inputs based on the last one that changed (partially solved)
-    - use mapping table
+- patch Gera show
+- test: after setting windows machine to sleep the dmxout CHOP seems to have problems with sending dmx packages
+- UI for OSC Settings for ip address
 
 ## TODOs
 - collect example photos for "fremd geworden" scenes
@@ -17,7 +20,6 @@ creating a lighting environment that is portable and minimalistic yet able to do
     - presets for Color, Position, FX
 - rework TouchOSC patch with grid:text and auto generating and naming faders
 - optimize projector fading from off to on - projector needs a little time to turn on which results in a brightness jump when it turns on 
-- UI for OSC Settings with static ip address
 - park fixtures
 - create a fixture renaming function that also updates the storage table
 - create overview plan from network in README.md
@@ -26,6 +28,9 @@ creating a lighting environment that is portable and minimalistic yet able to do
 - create OSC feedback for:
     - save function
     - fog machine lock
+- update all UI inputs based on the last one that changed (partially solved)
+    - use mapping table
+- create update script to update select operators
 
 ### ideas
 - sometimes triggering a python script is heavy on the cpu and results in frame drops
@@ -40,8 +45,15 @@ creating a lighting environment that is portable and minimalistic yet able to do
 if there are no "Dimmer" or "Intensity" in dmxfunctions a virtual one will be created
 TODO virtual dimmer should only affect color parameters - fixtures with strobe need to be selected carefully
 
+### storage
+- select operators from the storage/parameters DAT will be used throughout the network which creates loops
+    - since all values in null2 are constant locking it solves the problem
+    - changes happen only when there are more fixtures created - adding an update script to the CreateFixture() function from main.py could unlock and re-lock null2
+
 ### load Banks
-when moving the master fader the pc ui will be updated upon release
+- managed via buttons and faders from UI or TouchOSC
+    - buttons in two banks load the presets directly from the storage table
+    - a bank_fader crossfades between banks 
 
 ### TD Lighting UI
 - Master Fader
