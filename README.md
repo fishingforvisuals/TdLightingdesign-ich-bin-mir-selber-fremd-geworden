@@ -9,6 +9,7 @@ creating a lighting environment that is portable and minimalistic yet able to do
 ## TODOs urgent   
 - patch Gera show
 - test: after setting windows machine to sleep the dmxout CHOP seems to have problems with sending dmx packages
+- create update script to update select operators in storage
 
 ## TODOs
 - collect example photos for "fremd geworden" scenes
@@ -30,7 +31,7 @@ creating a lighting environment that is portable and minimalistic yet able to do
     - fog machine lock
 - update all UI inputs based on the last one that changed (partially solved)
     - use mapping table
-- create update script to update select operators
+
 
 ### ideas
 - sometimes triggering a python script is heavy on the cpu and results in frame drops

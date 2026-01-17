@@ -328,6 +328,16 @@ class Main:
             parCHOP.par.parameters = parameter_selection
             parCHOP.par.renameto = renameto_selection
 
+        def reinitStorage():
+            """
+            the storage input table needs to be locked as it would create a dependency loop
+            this function unlocks and re-locks the parameters and is only necessary when fixtures are changed or added
+            """
+            target = op("storage/param_locked")
+            target.lock = 0
+            target.lock = 1
+            print("reinitialized storage")
+
         for num_fixture in range(1, amount + 1):
             fixture_name = f"{fixture_group}_{template}_{fixture_id}"
 
@@ -349,8 +359,8 @@ class Main:
                     )
                 else:
                     fixture = op("fixtures").copy(op("base_network"), name=fixture_name)
-                fixture.nodeX = -fixture_group * 200
-                fixture.nodeY = -fixture_id * 160
+                fixture.nodeX = -fixture_id * 200
+                fixture.nodeY = -fixture_group * 160
             else:
                 fixture = op(f"fixtures/{fixture_name}")
 
@@ -374,6 +384,8 @@ class Main:
 
             # initNetwork(comp=fixture)
             fixture_id += 1
+
+        reinitStorage()
 
         # TODO once I create a fixture I need to update my rename CHOP and constant CHOPs that control my override CHOP
 
